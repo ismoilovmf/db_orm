@@ -1,8 +1,12 @@
+import os
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from models import create_tables, Publisher, Book, Shop, Stock, Sale
+db_user = os.getenv("db_user")
+db_pass = os.getenv("db_pass")
+dp_name = os.getenv("db_name")
 
-DNS = "postgresql://postgres:postgres@localhost:5432/postgres"
+DNS = f"postgresql://{db_user}:{db_pass}@localhost:5432/{dp_name}"
 engine = sqlalchemy.create_engine(DNS)
 
 create_tables(engine)
@@ -25,7 +29,7 @@ if r.isdigit():
     for b in session.query(Publisher).filter(Publisher.id==int(r)):
         print(b)
 else:
-    for b in session.query(Publisher).filter(Publisher.name.like(f'%{r}%')):
+    for b in session.query(Publisher).filter(Publisher.name.like(r)):
         print(b)
 
 
